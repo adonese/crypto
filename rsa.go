@@ -1,4 +1,5 @@
-package main
+//Package crypto implements IPIN encryption as per EBS
+package crypto
 
 import (
 	"crypto/rand"
@@ -6,16 +7,10 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"fmt"
-
-	"flag"
-
-	"github.com/google/uuid"
 )
 
-var uid = uuid.New().String()
-
-// TODO #2 make this main program, a package 
-func rsaEncrypt(pubkey string, pin string, uuid string) (string, error) {
+// TODO #2 make this main program, a package
+func Encrypt(pubkey string, pin string, uuid string) (string, error) {
 	block, err := base64.StdEncoding.DecodeString(pubkey)
 
 	if err != nil {
@@ -39,13 +34,6 @@ func rsaEncrypt(pubkey string, pin string, uuid string) (string, error) {
 	//fmt.Printf("the encryption is: %v", rsakey)
 	encodedKey := base64.StdEncoding.EncodeToString(rsakey)
 	fmt.Printf("the key is: %v\n", encodedKey)
-	fmt.Printf("The uuid is: %v\n", uid)
+	fmt.Printf("The uuid is: %v\n", uuid)
 	return encodedKey, nil
-}
-
-func main(){
-	key := flag.String("key", "", "public key from ebs")
-	ipin := flag.String("ipin", "0000", "ipin you want to create its pin block")
-	flag.Parse()
-	fmt.Print(rsaEncrypt(*key, *ipin, uid))
 }
