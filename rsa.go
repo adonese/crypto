@@ -3,16 +3,18 @@ package main
 import (
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/x509"
 	"encoding/base64"
 	"fmt"
-	"crypto/x509"
+
+	"flag"
 
 	"github.com/google/uuid"
-	"flag"
 )
 
 var uid = uuid.New().String()
 
+// TODO #2 make this main program, a package 
 func rsaEncrypt(pubkey string, pin string, uuid string) (string, error) {
 	block, err := base64.StdEncoding.DecodeString(pubkey)
 
