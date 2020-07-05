@@ -31,7 +31,6 @@ class PinBlock:
         clear_pin_block = self.clear_pin_block()
         des_master_key = DES.new(bytes.fromhex(self.tmk))
         decrypted_working_key = des_master_key.decrypt(bytes.fromhex(self.twk))
-        print(f"The decrypted working key is: f{decrypted_working_key.hex(), len(decrypted_working_key)}")
         assert isinstance(decrypted_working_key, bytes)
         d = DES.new(decrypted_working_key)
         pin_block = d.encrypt(bytes.fromhex(clear_pin_block))
