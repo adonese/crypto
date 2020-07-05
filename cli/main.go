@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/adonese/crypto"
 	"github.com/google/uuid"
 )
 
@@ -13,5 +14,5 @@ func main(){
 	key := flag.String("key", "", "public key from ebs")
 	ipin := flag.String("ipin", "0000", "ipin you want to create its pin block")
 	flag.Parse()
-	fmt.Print(crypto.rsaEncrypt(*key, *ipin, uid))
+	fmt.Print(crypto.Encrypt(*key, *ipin, uid))
 }
