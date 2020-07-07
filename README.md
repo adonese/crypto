@@ -16,3 +16,15 @@ Soon we will be adding:
 Add more testing
 
 ## Directory listing
+
+We follow a simple directory structure, since we have PIN and IPIN encryption, it goes like this:
+
+- directories have *.language_extension to indicate the language being used. E.g., ipin.js directory means this holds ipin encryption in javascript. And so on
+
+We currently have the following implementations and languages, authors are listed as well:
+
+- pin (@adonese)
+- ipin.js (fakhrisati)
+- pin.java (@wadjaafar)
+- cli (@adonese)
+- ipin.java (@wadjaavar)
