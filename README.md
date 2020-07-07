@@ -13,7 +13,8 @@ Soon we will be adding:
 
 ## TODO #1s
 
-Add more testing
+- Add more testing
+- Implement web interface
 
 ## Directory listing
 
