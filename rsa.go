@@ -10,6 +10,9 @@ import (
 )
 
 // TODO #2 make this main program, a package
+
+//Encrypt given a public key and pin and UUID, encrypt encrypts
+// to EBS compatible RSA payload
 func Encrypt(pubkey string, pin string, uuid string) (string, error) {
 	block, err := base64.StdEncoding.DecodeString(pubkey)
 

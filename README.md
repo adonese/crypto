@@ -10,6 +10,10 @@ Soon we will be adding:
 - Java (PIN, iPIN)
 - WASM (IPIN)
 
+## Notes TODO #3
+
+This project uses different languages, but we tried to make clear instructions per each directory. 
+
 
 ## TODO #1s
 
