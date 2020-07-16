@@ -15,5 +15,8 @@
     "open-source"
   ],
   "author": "Fakhri Boto, Mohamed Yousif",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "jsencrypt": "^3.0.0-rc.1"
+  }
 }
