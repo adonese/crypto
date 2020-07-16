@@ -1,0 +1,19 @@
+{
+  "name": "ebs-ipin",
+  "version": "1.0.0",
+  "description": "Support for EBS (CBOS) Internet PIN (IPIN) encryption",
+  "main": "ipin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ipin",
+    "ebs",
+    "cbos",
+    "encryption",
+    "noebs",
+    "open-source"
+  ],
+  "author": "Fakhri Boto, Mohamed Yousif",
+  "license": "MIT"
+}
