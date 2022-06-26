@@ -10,9 +10,9 @@ import (
 
 var uid = uuid.New().String()
 
-func main(){
+func main() {
 	key := flag.String("key", "", "public key from ebs")
 	ipin := flag.String("ipin", "0000", "ipin you want to create its pin block")
 	flag.Parse()
-	fmt.Print(crypto.Encrypt(*key, *ipin, uid))
+	fmt.Print(crypto.EncryptNoebs(*key, *ipin))
 }
