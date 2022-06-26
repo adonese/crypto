@@ -108,7 +108,12 @@ func DecryptNoebs(privkey string, payload string) (string, error) {
 // - we used sha256 to sign the hash of the message, instead of the actual message
 // WE expect that the client side will abide by this same interface we are designing here
 func Sign(privkey string) (string, error) {
-	block, _ := pem.Decode([]byte(privkey))
+
+	data, err := decode(privkey)
+	if err != nil {
+		return "", err
+	}
+	block, _ := pem.Decode(data)
 	if block == nil {
 		panic("failed to parse PEM block containing the private key")
 	}
@@ -141,9 +146,16 @@ func Sign(privkey string) (string, error) {
 //Verify used by noebs systems to verify the authenticity of the clients.
 // We are currently using it to ensure that noebs mobile clients are valid (providing their keys are valid)
 // this is a rather very tricky api, but it is the only way we can ensure a simple way of authenticating our users
+//
+// pubkey is base64 string encoding for the public key!
 func Verify(pubkey string, payload string) (bool, error) {
 
-	block, _ := pem.Decode([]byte(pubkey))
+	data, err := decode(pubkey)
+	if err != nil {
+		return false, err
+	}
+
+	block, _ := pem.Decode(data)
 	if block == nil {
 		panic("failed to parse PEM block containing the private key")
 	}
@@ -170,4 +182,12 @@ func Verify(pubkey string, payload string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func decode(data string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(data)
+}
+
+func encode(data string) string {
+	return base64.StdEncoding.EncodeToString([]byte(data))
 }
