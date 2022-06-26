@@ -3,6 +3,7 @@
 // The code is battle-tested and has been used in production for years.
 //
 // Signing and Verifying
+//
 // In addition to the EBS encryption support, crypto also supports signing and verifying for keys. Most notably, noebs uses
 // crypto to sign users for token refresh.
 package crypto
@@ -47,7 +48,7 @@ func Encrypt(pubkey string, payload string) (string, error) {
 	return encodedKey, nil
 }
 
-//Decrypt given a private key and payload to EBS compatible RSA payload
+//EncryptNoebs given a private key and payload to EBS compatible RSA payload
 // you must provide the payload in:
 // 		msg := uuid + pin
 // so that it is compatible with EBS' standard encryption
@@ -107,6 +108,19 @@ func DecryptNoebs(privkey string, payload string) (string, error) {
 // - we don't really sign a message, it is always hardcoded
 // - we used sha256 to sign the hash of the message, instead of the actual message
 // WE expect that the client side will abide by this same interface we are designing here
+//
+// NOTES
+//
+// Ideally, implementer should use a secure mechanism to generate private - public keys and
+// sign messages. In android, this is done via `Android keystore`, in particular
+//		val ks: Keystore = Keystore.getInstance("AndroidKeyStore").apply {
+// 			load(null)
+// 		}
+//		val aliases: Enumeration<String> = ks.aliases()
+//
+// Using secure facilities such as android keystore offers the utmost level of security and ensures our
+// compliance with payment standards.
+//
 func Sign(privkey string) (string, error) {
 
 	data, err := decode(privkey)
