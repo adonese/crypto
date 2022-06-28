@@ -32,4 +32,4 @@ We currently have the following implementations and languages, authors are liste
 - ipin.js (fakhrisati)
 - pin.java (@wadjaafar)
 - cli (@adonese)
-- ipin.java (@wadjaavar)
+- ipin.java (@wadjaafar)

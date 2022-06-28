@@ -131,38 +131,35 @@ QCS3eL4elcKvcS1lhrZiNpK2yGNYdlqH4jku/lnnhW03mg==
 }
 
 func TestVerify(t *testing.T) {
-	pubKey := `
+	pubKey2 := `
 -----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDR0lD1Fyia1GmodfSzKaiwhiZ0
-0OMcHjTy7cxZsENmLxO0i0RQ0o2PHqz+cMX2CEEpUEDIPatv3xuVln53S7NTMFxY
-h3RG12VafI3XtMZTNovcLuNp2CYPLz+/2IVvCktsTp9it3pDqB5MLNTWMSNWyuk3
-qiJkr3VctmXoxdRvFwIDAQAB
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9wFa95QL5QEgA+IF3So/MaHAeTPMFD8FxK3KwUtuEWPypTzxhJQ3NtpZGwhLmfWCeSfqwpvGchz38b74/9gE16SL7Ef/WHlOtVFv8P4qYoW5a/cyTWxuxtwNC0oxYyRSc1FzlqiiZ0AVhwAPdXNjfpIhpCr6H9gdWeMcos7BAFSNzWsdEfgOulfI6trMpVem0IXVLaSuPcrWzsQQzEjG+r13tTxLFZM3f1PudgGBu3mF6TGIKiy58MO6AUvax9KFua0TQ/MurcS4visIqjcCZiYuyZ9S10sflU4vc5WWZwuhl/wdIePYlFiQVjprmzH7u0stgpKNp0pUhAruZQHloQIDAQAB
 -----END PUBLIC KEY-----`
-	signature := "388a6e734f7ff2171eb73f4cfc4e08bd30da6381c0083b8c477328842e1a48e00deaf995f2b145c32918c67b11f89e2917dae7b40cd70d89f02975009b291cce6b784acab9b9be54f3e44c5822722fc491d7bd96e15b4e88a43c61124f453cbd76e4aba1d4f95e3ec8c0efcbade7bc6b28fab76cb725a65652d92213c942b08d"
-	want := true
 
-	key := encode(pubKey)
+	signature2 := "NY18F9UxMi/kLPNII390EA3rPiiPq3BcPgoOUYgTqjtGWC4+B50SnKHJMjociHkdJ8HTd739TknPfE59Zhw1KfUFVQM+wZELm9Jg/uq7RW+KY0tKIliIl7To8XN8B1EoMDwLjvF5TUegOYF5UsQG69ypwM960OYx3sWl8FNfpjZS3K8WekVsbJLxjB5N74IeKBPQ044BnSdYojB9wzL4lyCRgErZUCpy/kifwANwiSkoXeynmDEpdLN/KJI6LnKRAQm0kKnSSwEYak8CG7n89u2U6Xgxqox/PimYSYtnC2RLktXUJbtu6LHU9ngYkWrrLczWrMuGNQMrnHgblQtx7g=="
+
+	message := "RAMI"
+	print(signature2)
+	data := encode(pubKey2)
+
 	type args struct {
 		pubkey  string
 		payload string
+		message string
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    bool
-		wantErr bool
+		name string
+		args args
 	}{
-		{"test-verify", args{pubkey: key, payload: signature}, want, false},
+		// {"test-verify", args{pubkey: key, payload: signature}, want, false},
+		{"test-verify-rammy", args{pubkey: data, payload: signature2, message: message}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Verify(tt.args.pubkey, tt.args.payload)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Verify() error = %v, wantErr %v", err, tt.wantErr)
+			_, err := Verify(tt.args.pubkey, tt.args.payload, tt.args.message)
+			if err != nil {
+				t.Errorf("Verify() error = %v", err)
 				return
-			}
-			if got != tt.want {
-				t.Errorf("Verify() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -202,6 +199,34 @@ QCS3eL4elcKvcS1lhrZiNpK2yGNYdlqH4jku/lnnhW03mg==
 			got := encode(tt.args.data)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("encode() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_decode(t *testing.T) {
+	type args struct {
+		data string
+	}
+	key := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9wFa95QL5QEgA+IF3So/MaHAeTPMFD8FxK3KwUtuEWPypTzxhJQ3NtpZGwhLmfWCeSfqwpvGchz38b74/9gE16SL7Ef/WHlOtVFv8P4qYoW5a/cyTWxuxtwNC0oxYyRSc1FzlqiiZ0AVhwAPdXNjfpIhpCr6H9gdWeMcos7BAFSNzWsdEfgOulfI6trMpVem0IXVLaSuPcrWzsQQzEjG+r13tTxLFZM3f1PudgGBu3mF6TGIKiy58MO6AUvax9KFua0TQ/MurcS4visIqjcCZiYuyZ9S10sflU4vc5WWZwuhl/wdIePYlFiQVjprmzH7u0stgpKNp0pUhAruZQHloQIDAQAB"
+	want := []byte("dsds")
+	tests := []struct {
+		name    string
+		args    args
+		want    []byte
+		wantErr bool
+	}{
+		{"rammy-key", args{data: key}, want, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := decode(tt.args.data)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("decode() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("decode() = %v, want %v", got, tt.want)
 			}
 		})
 	}

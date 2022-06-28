@@ -15,9 +15,9 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
-	"encoding/hex"
 	"encoding/pem"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -162,43 +162,44 @@ func Sign(privkey string) (string, error) {
 // this is a rather very tricky api, but it is the only way we can ensure a simple way of authenticating our users
 //
 // pubkey is base64 string encoding for the public key!
-func Verify(pubkey string, payload string) (bool, error) {
+// [signature]: is base64 encoded
+// [message]: is the message that we want to sign
+func Verify(pubkey string, signature, message string) (bool, error) {
 
 	data, err := decode(pubkey)
 	if err != nil {
 		return false, err
 	}
+	signatureBase, _ := decode(signature)
 
 	block, _ := pem.Decode(data)
-	if block == nil {
-		panic("failed to parse PEM block containing the private key")
+	if block == nil || block.Type != "PUBLIC KEY" {
+		log.Fatal("failed to decode PEM block containing public key")
 	}
 
 	pub, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
-		panic("failed to parse DER encoded private key: " + err.Error())
+		return false, err
 	}
-
-	message := []byte("message to be signed")
-	signature, _ := hex.DecodeString(payload)
 
 	// Only small messages can be signed directly; thus the hash of a
 	// message, rather than the message itself, is signed. This requires
 	// that the hash function be collision resistant. SHA-256 is the
 	// least-strong hash function that should be used for this at the time
 	// of writing (2016).
-	hashed := sha256.Sum256(message)
+	hashed := sha256.Sum256([]byte(message))
 	rsaPub := pub.(*rsa.PublicKey)
-	hashErr := rsa.VerifyPKCS1v15(rsaPub, crypto.SHA256, hashed[:], signature)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error from verification: %s\n", err)
-		return false, hashErr
-	}
 
+	if err := rsa.VerifyPKCS1v15(rsaPub, crypto.SHA256, hashed[:], signatureBase); err != nil {
+		fmt.Fprintf(os.Stderr, "Error from verification: %s\n", err)
+		return false, err
+	}
 	return true, nil
 }
 
 func decode(data string) ([]byte, error) {
+	res, _ := base64.StdEncoding.DecodeString(data)
+	fmt.Printf("%X", res)
 	return base64.StdEncoding.DecodeString(data)
 }
 
