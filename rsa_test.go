@@ -130,6 +130,34 @@ QCS3eL4elcKvcS1lhrZiNpK2yGNYdlqH4jku/lnnhW03mg==
 	}
 }
 
+func TestVerifyWithHeaders(t *testing.T) {
+
+	pubkey := `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAteM6IQBAUK4Lsb42zgr13YRHoBWyiQHuifjHvxxI7QHnOlQGRYU0xqgplV+Gumers6c3vH5xtlPsy6lHFJ7VQnTPHlZIcRefy7rKsVC+D1cjA6H3W6jWAdKDslxEb8sMfnatWI1PO0MNDz4Nh7KHS3V51nDqlx7I+TggtKZU8zq/epeVb+pqCKQphGd36J9KqZzaobDKxY6ObrLQDncKtF74UerJjmQxFd52VM/XDwOjmWS7shpQZx2HaLzFq6IOpTnKE+nySZqoXZVDB5j6llctinSs9E+HAOmN2r32B6zthYvMIO8gQjSZNyRp0E/GKhlPgfF8r55upszm7qIUZQIDAQAB`
+	signature := "Xq4J7E2b7QK7mqn7YFnbnd+g1IHCTlvn8d154/CDs0rO+idvJ/e4gEpjOOpfr69EaDILnAgBudZRnAMHhGRIPEm2vCLUREinWwl5pDE0Gbee9h2OjSS26cEPE1fC626PwvizcwTHGPmguw1jYSNy74B128jsdG/RX1xAbbDBYKbJIjG3yXxzZZG/N6rGIQksJdDhgzzsgIESTrXh2JfX6iyEeArWoFJTsDm6T8tXd5/phQRlocQ18OGcnCBMM66CWC0DJhdUQfB7q/tenPYk3SMld7MS7pcWGZ92bMHXPYMzXhVgJnvUZZjkMr16Dn1YFoKvv4irUcy4Fol5z3Rhaw=="
+	message := "RAMI"
+
+	type args struct {
+		pubkey  string
+		payload string
+		message string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{"test-verify-rammy", args{pubkey: pubkey, payload: signature, message: message}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := VerifyWithHeaders(tt.args.pubkey, tt.args.payload, tt.args.message)
+			if err != nil {
+				t.Errorf("VerifyWithHeaders() error = %v", err)
+				return
+			}
+		})
+	}
+}
+
 func TestVerify(t *testing.T) {
 	pubKey2 := `
 -----BEGIN PUBLIC KEY-----
@@ -138,9 +166,12 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9wFa95QL5QEgA+IF3So/MaHAeTPMFD8FxK3K
 
 	signature2 := "NY18F9UxMi/kLPNII390EA3rPiiPq3BcPgoOUYgTqjtGWC4+B50SnKHJMjociHkdJ8HTd739TknPfE59Zhw1KfUFVQM+wZELm9Jg/uq7RW+KY0tKIliIl7To8XN8B1EoMDwLjvF5TUegOYF5UsQG69ypwM960OYx3sWl8FNfpjZS3K8WekVsbJLxjB5N74IeKBPQ044BnSdYojB9wzL4lyCRgErZUCpy/kifwANwiSkoXeynmDEpdLN/KJI6LnKRAQm0kKnSSwEYak8CG7n89u2U6Xgxqox/PimYSYtnC2RLktXUJbtu6LHU9ngYkWrrLczWrMuGNQMrnHgblQtx7g=="
 
+	pubkey := `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAteM6IQBAUK4Lsb42zgr13YRHoBWyiQHuifjHvxxI7QHnOlQGRYU0xqgplV+Gumers6c3vH5xtlPsy6lHFJ7VQnTPHlZIcRefy7rKsVC+D1cjA6H3W6jWAdKDslxEb8sMfnatWI1PO0MNDz4Nh7KHS3V51nDqlx7I+TggtKZU8zq/epeVb+pqCKQphGd36J9KqZzaobDKxY6ObrLQDncKtF74UerJjmQxFd52VM/XDwOjmWS7shpQZx2HaLzFq6IOpTnKE+nySZqoXZVDB5j6llctinSs9E+HAOmN2r32B6zthYvMIO8gQjSZNyRp0E/GKhlPgfF8r55upszm7qIUZQIDAQAB`
+	signature := "Xq4J7E2b7QK7mqn7YFnbnd+g1IHCTlvn8d154/CDs0rO+idvJ/e4gEpjOOpfr69EaDILnAgBudZRnAMHhGRIPEm2vCLUREinWwl5pDE0Gbee9h2OjSS26cEPE1fC626PwvizcwTHGPmguw1jYSNy74B128jsdG/RX1xAbbDBYKbJIjG3yXxzZZG/N6rGIQksJdDhgzzsgIESTrXh2JfX6iyEeArWoFJTsDm6T8tXd5/phQRlocQ18OGcnCBMM66CWC0DJhdUQfB7q/tenPYk3SMld7MS7pcWGZ92bMHXPYMzXhVgJnvUZZjkMr16Dn1YFoKvv4irUcy4Fol5z3Rhaw=="
 	message := "RAMI"
 	print(signature2)
-	data := encode(pubKey2)
+	data2 := encode(pubKey2)
+	data := encode(addHeader(pubkey))
 
 	type args struct {
 		pubkey  string
@@ -152,7 +183,8 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9wFa95QL5QEgA+IF3So/MaHAeTPMFD8FxK3K
 		args args
 	}{
 		// {"test-verify", args{pubkey: key, payload: signature}, want, false},
-		{"test-verify-rammy", args{pubkey: data, payload: signature2, message: message}},
+		{"test-verify-rammy", args{pubkey: data, payload: signature, message: message}},
+		{"test-verify-rammy", args{pubkey: data2, payload: signature2, message: message}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

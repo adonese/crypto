@@ -197,6 +197,13 @@ func Verify(pubkey string, signature, message string) (bool, error) {
 	return true, nil
 }
 
+//VerifyWithHeaders appends a ----Begin of Public---- into a public key string and pass
+// over to [Verify]
+func VerifyWithHeaders(pubkey string, signature, message string) (bool, error) {
+	key := encode(addHeader(pubkey))
+	return Verify(key, signature, message)
+}
+
 func decode(data string) ([]byte, error) {
 	res, _ := base64.StdEncoding.DecodeString(data)
 	fmt.Printf("%X", res)
@@ -205,4 +212,8 @@ func decode(data string) ([]byte, error) {
 
 func encode(data string) string {
 	return base64.StdEncoding.EncodeToString([]byte(data))
+}
+
+func addHeader(data string) string {
+	return "-----BEGIN PUBLIC KEY-----\n" + data + "\n-----END PUBLIC KEY-----"
 }
